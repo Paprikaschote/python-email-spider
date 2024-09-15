@@ -1,3 +1,4 @@
 beautifulsoup4==4.12.3
-pypdf==4.3.1
+pdfreader==0.1.15
 requests==2.32.3
+tldextract==5.1.2
