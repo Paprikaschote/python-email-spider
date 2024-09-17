@@ -94,4 +94,4 @@ Hiding an email address with javascript by encoding it. This is a common solutio
 
 [(Back to top)](#email-spider-for-websites-and-pdfs)
 
-The GNU GENERAL PUBLIC LICENSE. Please have a look at the [LICENSE.md](LICENSE.md) for more details.
+The GNU GENERAL PUBLIC LICENSE. Please have a look at the [LICENSE](LICENSE) for more details.
