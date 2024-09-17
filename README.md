@@ -1,9 +1,5 @@
 # Email Spider for Websites and PDFs
-
-[![forthebadge](http://forthebadge.com/images/badges/made-with-python.svg)](http://forthebadge.com)
-
-[![PyPI version](https://badge.fury.io/py/beautifulsoup4.svg)](https://badge.fury.io/py/beautifulsoup4)
-[![PyPI version](https://badge.fury.io/py/pdfreader.svg)](https://badge.fury.io/py/pdfreader)
+![Static Badge](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)
 
 A Python script that crawls every email address of a given website and saves the result in a nosql file. The search also includs pdf files. This script should be used for educational purposes only. I am not responsible for any misuse of this script. My intention is to help finding mail addresses on websites and explain how to secure them from spam [Preventation and solutions](#preventation-and-solutions).
 
