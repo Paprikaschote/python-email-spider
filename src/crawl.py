@@ -56,6 +56,7 @@ class EmailSpider:
         self.headers = {
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
         }
+        self.session = requests.Session()
 
     def generate_db_name(self, domain):
         date_str = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -163,14 +164,14 @@ class EmailSpider:
 
     def fetch_url(self, url):
         try:
-            response = requests.get(url, headers=self.headers)
+            response = self.session.get(url, headers=self.headers)
             response.raise_for_status()
             return response
         except requests.RequestException:
             if url.startswith("https://"):
                 try:
                     url = url.replace("https://", "http://")
-                    response = requests.get(url)
+                    response = self.session.get(url)
                     response.raise_for_status()
                     return response
                 except requests.RequestException:
@@ -197,13 +198,17 @@ class EmailSpider:
         if depth > self.max_depth:  # Check for max depth
             return []
 
+        with lock:
+            if clean_url in self.visited_urls:
+                return []
+            self.visited_urls.add(clean_url)
+
         response = self.fetch_url(clean_url)
         if response is None:
             return []
 
         print(f"Crawling: {clean_url} at depth {depth}")
 
-        self.visited_urls.add(clean_url)
         self.save_visited_url(clean_url)
 
         emails = set()
@@ -232,8 +237,9 @@ class EmailSpider:
                     url_parts = urlparse(absolute_clean_link)
                     if url_parts.hostname and self.url in url_parts.hostname:
                         new_depth = depth + 1
-                        if absolute_clean_link not in self.visited_urls:
-                            links.append((absolute_clean_link, new_depth))
+                        with lock:
+                            if absolute_clean_link not in self.visited_urls:
+                                links.append((absolute_clean_link, new_depth))
         return links
 
     def normalize_at(self):
@@ -268,6 +274,8 @@ class EmailSpider:
 def run(config):
     domain = config["domain"]
     max_depth = config["maxdepth"]
+    verbose = config["verbose"]
+
     if not domain:
         while True:
             domain = input("Enter a domain: ")
@@ -276,10 +284,11 @@ def run(config):
             print("Invalid domain. Please enter a valid domain.")
 
     domain = strip_protocol(domain)
+    print(domain)
     spider = EmailSpider(domain, max_depth)
 
     start = time.time()
-    spider.crawl(config["verbose"])
+    spider.crawl(verbose)
     delta = time.time() - start
     if verbose:
         print(f"run time: {delta} seconds")

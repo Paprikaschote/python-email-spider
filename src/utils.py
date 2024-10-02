@@ -38,7 +38,7 @@ def decode_email(e):
 
 
 def strip_protocol(domain):
-    return re.sub(r"https?://", "", domain)
+    return re.sub(r"https?://", "", domain).rstrip("/")
 
 
 def get_domain(url, regex=False):
