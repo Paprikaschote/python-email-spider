@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-
 import argparse
+import sys
 
 from src.crawl import run as run_crawl
 from src.read import run as run_read

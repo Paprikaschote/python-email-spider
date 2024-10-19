@@ -1,8 +1,6 @@
-import platform
+import argparse
 import re
-import subprocess
 import unicodedata
-from urllib.parse import urlparse
 
 from tldextract import extract
 
@@ -73,6 +71,3 @@ def check_max_depth(md):
         raise argparse.ArgumentTypeError("invalid value. Must be an integer")
     return md
 
-
-# def check_max_depth(max_depth):
-#     return re.match(r"^\d+$", max_depth)

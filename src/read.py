@@ -1,8 +1,6 @@
 import os
 import sqlite3
 
-from .utils import slugify
-
 
 class DatabaseReader:
     def __init__(self, db_name=None):
