@@ -61,7 +61,7 @@ def select_database(databases):
             else:
                 print("incorrect number.")
         except ValueError:
-            print("Please enter a valid interger.")
+            print("Please enter a valid integer.")
 
 
 def run():
