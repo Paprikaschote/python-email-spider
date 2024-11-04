@@ -1,5 +1,7 @@
 import os
 import sqlite3
+import dns.resolver
+from smtplib import SMTP
 
 
 class DatabaseReader:
@@ -36,7 +38,20 @@ class DatabaseReader:
 
             print("Found mail addresses:")
             for email, urls in email_to_pages.items():
-                print(f"\nemail: {email} \npages: {', '.join(urls)}")
+                print(f"\nemail: {email}")
+                domain = email.split("@")[1]
+                try:
+                    answers = dns.resolver.resolve(domain, "MX")
+                    if len(answers) == 0:
+                        print(f"Domain has no MX record.\n")
+                    else:
+                        for rdata in answers:
+                            with SMTP(str(rdata.exchange)) as smtp:
+                                (code, message) = smtp.verify(email)
+                                print(f"Verifying {email} on {rdata.exchange}: {message}")
+                except dns.resolver.NXDOMAIN:
+                    print(f"Non-existing domain {domain}")
+                print(f"pages: {', '.join(urls)}")
         else:
             print("No email addresses found in the selected database.")
 
