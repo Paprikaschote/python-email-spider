@@ -46,6 +46,8 @@ After that you can run the script with the `read` command to display the result.
 
 - With `-v` (or) `--verbose` : increase verbosity
 
+- With `-vd` (or) `--verifydomains` verify mail addresses when reading from database
+
 # Installation
 
 [(Back to top)](#email-spider-for-websites-and-pdfs)

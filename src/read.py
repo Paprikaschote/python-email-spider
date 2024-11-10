@@ -1,5 +1,8 @@
 import os
 import sqlite3
+from smtplib import SMTP
+
+import dns.resolver
 
 
 class DatabaseReader:
@@ -24,7 +27,21 @@ class DatabaseReader:
         conn.close()
         return results
 
-    def output(self):
+    def verify_domain(self, email: str) -> None:
+        try:
+            domain = email.split("@")[1]
+            answers = dns.resolver.resolve(domain, "MX")
+            if len(answers) == 0:
+                print("Domain has no MX record.")
+            else:
+                for rdata in answers:
+                    with SMTP(str(rdata.exchange)) as smtp:
+                        (code, message) = smtp.verify(email)
+                        print(f"Verifying {email} on {rdata.exchange}: {message}")
+        except dns.resolver.NXDOMAIN:
+            print(f"Non-existing domain {domain}")
+
+    def output(self, verify_domains: bool = False):
         results = self.fetch_emails_and_pages()
 
         if results:
@@ -37,6 +54,8 @@ class DatabaseReader:
             print("Found mail addresses:")
             for email, urls in email_to_pages.items():
                 print(f"\nemail: {email} \npages: {', '.join(urls)}")
+                if verify_domains:
+                    self.verify_domain(email)
         else:
             print("No email addresses found in the selected database.")
 
@@ -64,8 +83,10 @@ def select_database(databases):
             print("Please enter a valid integer.")
 
 
-def run():
+def run(config):
+    verify_domains = config["verifydomains"]
+
     databases = get_all_databases()
     display_databases(databases)
     db_name = select_database(databases)
-    DatabaseReader(db_name).output()
+    DatabaseReader(db_name).output(verify_domains)

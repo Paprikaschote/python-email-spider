@@ -29,6 +29,9 @@ def arguments():
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="increase verbosity"
     )
+    parser.add_argument(
+        "-vd", "--verifydomains", action="store_true", help="verify mail addresses when reading from database"
+    )
     parser.add_argument("op", choices=["crawl", "read"], help="Operation to perform")
     args = parser.parse_args()
     return vars(args)
@@ -41,7 +44,7 @@ if __name__ == "__main__":
         case "crawl":
             run_crawl(config)
         case "read":
-            run_read()
+            run_read(config)
         case _:
             print("Invalid operation. Exiting.")
             sys.exit(1)
