@@ -44,4 +44,4 @@ if __name__ == "__main__":
             run_read()
         case _:
             print("Invalid operation. Exiting.")
-            sys.exit
+            sys.exit(1)
