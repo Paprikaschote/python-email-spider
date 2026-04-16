@@ -40,8 +40,7 @@ def strip_protocol(domain):
 
 
 def get_domain(url, regex=False):
-    domain = extract(url).registered_domain
-    # domain = td + "." + tsu
+    domain = extract(url).top_domain_under_public_suffix
     if regex:
         return domain.replace(".", r"\.")
     return domain
